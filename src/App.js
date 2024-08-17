@@ -1,25 +1,63 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { Login } from "./component/Login";
+import { Signup } from "./component/Signup";
+import { Event } from "./component/Event";
+import { Box, Button } from "@chakra-ui/react";
+const App = () => {
+  const [view, setView] = useState("login");
+  const [eventView, seteventView] = useState(false);
+  const [user, setUser] = useState(null);
 
-function App() {
+  const handleLoginBtn = (userData) => {
+    setUser(userData);
+    setView("events");
+    seteventView(true);
+  };
+
+  const handleSignBtn = () => {
+    setView("login");
+  };
+
+  const handleToggleBtn = () => {
+    if (user) {
+      seteventView((prev) => !prev);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Box p={5} ml={"35%"}>
+      {view === "login" && (
+        <>
+          <Button onClick={() => setView("signup")} mb={4}>
+            Sign Up
+          </Button>
+          <Button onClick={() => setView("login")} mb={4}>
+            Login
+          </Button>
+          <Login onLogin={handleLoginBtn} />
+        </>
+      )}
+      {view === "signup" && (
+        <>
+          <Button onClick={() => setView("login")} mb={4}>
+            Login
+          </Button>
+          <Signup onSignup={handleSignBtn} />
+        </>
+      )}
+      {view === "events" && (
+        <>
+          <Button onClick={() => setView("login")} mb={4}>
+            Logout
+          </Button>
+          <Button mt={4} onClick={handleToggleBtn}>
+            {eventView ? "Hide Events" : "See Events"}
+          </Button>
+          {eventView && <Event />}
+        </>
+      )}
+    </Box>
   );
-}
+};
 
 export default App;
